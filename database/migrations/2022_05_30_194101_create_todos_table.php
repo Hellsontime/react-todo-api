@@ -17,7 +17,7 @@ class CreateTodosTable extends Migration
             $table->increments('id')->unsigned();
             $table->integer('user_id');
             $table->string('title');
-            $table->boolean('status');
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
