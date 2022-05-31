@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\v1\AuthController;
+use App\Http\Controllers\Api\v1\TodoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +25,13 @@ Route::group(["prefix" => "v1"], function () {
     Route::group(['middleware' => ['auth:sanctum']], function () {
 
         Route::post('logout/', [AuthController::class, 'logout'])->name('auth.logout');
+
+        Route::group(['middleware' => ['todo.user.check']], function () {
+
+            Route::resource('todos', TodoController::class)
+                ->parameter('todos', 'todoId')
+                ->except('create', 'edit');
+        });
 
     });
 });
