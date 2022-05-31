@@ -12,6 +12,7 @@ class Todo extends BaseModel
     protected $fillable = [
         'user_id',
         'title',
+        'status',
     ];
 
     protected $dates = ['deleted_at'];
