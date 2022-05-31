@@ -22,9 +22,13 @@ class TodoRepository implements TodoRepositoryInterface
             ->toArray();
     }
 
-    public function createUserTodo(array $requestBody): Todo
+    public function createUserTodo(array $requestBody): array
     {
-        return $this->_todo->create($requestBody);
+        $createdTodo = $this->_todo->create($requestBody);
+
+        return $this->_todo
+            ->find($createdTodo['id'])
+            ->toArray();
     }
 
     public function getUserTodoById(int $userId, int $todoId): array
