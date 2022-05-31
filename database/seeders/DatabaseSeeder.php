@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Todo;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -16,6 +17,9 @@ class DatabaseSeeder extends Seeder
     {
          User::factory()
              ->count(10)
-             ->create();
+             ->has(
+                 Todo::factory()
+                 ->count(5)
+             )->create();
     }
 }
