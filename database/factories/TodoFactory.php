@@ -16,6 +16,7 @@ class TodoFactory extends Factory
         return [
             'user_id' => random_int(1,20),
             'title' => $this->faker->sentence,
+            'status' => $this->faker->boolean(),
         ];
     }
 }

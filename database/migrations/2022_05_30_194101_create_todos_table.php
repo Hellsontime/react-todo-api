@@ -17,6 +17,7 @@ class CreateTodosTable extends Migration
             $table->increments('id')->unsigned();
             $table->integer('user_id');
             $table->string('title');
+            $table->boolean('status');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,3 +33,4 @@ class CreateTodosTable extends Migration
         Schema::dropIfExists('todos');
     }
 }
+
