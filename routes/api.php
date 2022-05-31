@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\TodoController;
+use App\Http\Controllers\Api\v1\TodoStatusController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,11 @@ Route::group(["prefix" => "v1"], function () {
             Route::resource('todos', TodoController::class)
                 ->parameter('todos', 'todoId')
                 ->except('create', 'edit');
+
+            Route::group(["prefix" => "todos/{todoId}/"], function () {
+                Route::put('/status', [TodoStatusController::class, 'update'])
+                    ->name('status.update');
+            });
         });
 
     });
