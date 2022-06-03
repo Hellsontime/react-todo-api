@@ -1,0 +1,72 @@
+version: '3.7'
+services:
+
+    #PHP Service
+    react-todo-api:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: react-todo-api
+        container_name: react-todo-api
+        command: bash -c "php artisan migrate && php-fpm"
+        restart: unless-stopped
+        tty: true
+        env_file:
+            - .env
+        environment:
+            SERVICE_NAME: react-todo-api
+            SERVICE_TAGS: dev
+            DB_HOST: mysql
+        working_dir: /var/www/html
+        volumes:
+            - ./docker-configs/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        depends_on:
+            - mysql
+        networks:
+            - todo-network
+
+    #Nginx Service
+    webserver:
+        image: nginx:alpine
+        container_name: webserver
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "8081:80"
+            - "444:443"
+        volumes:
+            - ./:/var/www/html
+            - ./docker-configs/nginx/conf.d/:/etc/nginx/conf.d/
+        depends_on:
+            - react-todo-api
+        networks:
+            - todo-network
+
+    #MySQL Service
+    mysql:
+        image: mysql:5.7.22
+        container_name: mysql
+        restart: unless-stopped
+        tty: true
+        command: mysqld --init-file="/etc/mysql/init/init.sql"
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 0
+        volumes:
+            - mysql:/var/lib/mysql
+            - ./docker-configs/mysql/my.cnf:/etc/mysql/my.cnf
+            - ./docker-configs/mysql/init.sql:/etc/mysql/init/init.sql
+        networks:
+            - todo-network
+
+#Docker Networks
+networks:
+    todo-network:
+        name: todo-network
+        driver: bridge
+
+#Volumes
+volumes:
+    mysql:
+        driver: local
